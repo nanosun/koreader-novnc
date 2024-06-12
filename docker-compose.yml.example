@@ -1,0 +1,26 @@
+version: "3.7"
+
+services:
+  koreader:
+    # image: wardwouts/koreader-novnc
+    build: 
+      context: .
+      args:
+          - VERSION=2024.04
+          - ARCH=amd64
+          - PASSWORD=koreader
+    ports:
+      - "8080:8080"
+    volumes:
+      - "books:/books"
+      - "config:/config"
+      - "fonts:/fonts"
+      - "./passwd:/passwd"
+    environment:
+      # - CURSOR="-nocursor" # default
+      - CURSOR="-cursor X"
+      # - PASSWD="-rfbauth /passwd" # default
+      - PASSWD="-nopw"
+    container_name: koreader
+    restart: unless-stopped
+    

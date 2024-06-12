@@ -1,11 +1,12 @@
 FROM debian:bullseye-slim
 LABEL maintainer Ward Wouts <ward@wouts.nl>
 
-ENV LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8 LC_ALL=C.UTF-8 DISPLAY=:0.0 CURSOR="-nocursor"
-ENV EMULATE_READER_W="600" EMULATE_READER_H="800"
-ENV PASSWD="-rbfauth /passwd"
-ARG VERSION=0
-ARG ARCH=wrong
+ENV LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8 LC_ALL=C.UTF-8 DISPLAY=:0 CURSOR="-nocursor"
+ENV EMULATE_READER_W="600" EMULATE_READER_H="900"
+ENV PASSWD="-rfbauth /passwd"
+ARG PASSWORD=koreader
+ARG VERSION=2024.01
+ARG ARCH=amd64
 ARG KOREADERURL=https://github.com/koreader/koreader/releases/download/v$VERSION/koreader-$VERSION-$ARCH.deb
 
 # Install koreader and dependencies.
@@ -45,7 +46,8 @@ RUN ln -s /usr/share/novnc/vnc.html /usr/share/novnc/index.html \
     && mkdir -p /home/user/.config \
     && mkdir -p /opt \
     && ln -s /config /home/user/.config/koreader \
-    && x11vnc -storepasswd koreader /passwd \
+    && ln -s /fonts /usr/lib/koreader/fonts/customfonts \
+    && x11vnc -storepasswd $PASSWORD /passwd \
     && sed -i "s/UI.initSetting('resize', 'off');/UI.initSetting('resize', 'scale');/" /usr/share/novnc/app/ui.js \
     && sed -i "s/#noVNC_control_bar_anchor {/#noVNC_control_bar_anchor {\n  display: none;/" /usr/share/novnc/app/styles/base.css \
     && sed -i 's/<div class="noVNC_logo" translate="no"><span>no<\/span>VNC<\/div>/<div class="noVNC_logo" translate="no"><img src="app\/images\/koreader-logo.svg" width=80%><\/div>/' /usr/share/novnc/vnc.html \

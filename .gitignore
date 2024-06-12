@@ -1,0 +1,4 @@
+config/
+fonts/
+passwd
+docker-compose.yml
