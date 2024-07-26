@@ -1,13 +1,13 @@
-FROM debian:bullseye-slim
-LABEL maintainer Ward Wouts <ward@wouts.nl>
+FROM debian:bookworm-slim
+LABEL maintainer Ward Wouts
 
 ENV LANG=en_US.UTF-8 LANGUAGE=en_US.UTF-8 LC_ALL=C.UTF-8 DISPLAY=:0 CURSOR="-nocursor"
-ENV EMULATE_READER_W="600" EMULATE_READER_H="900"
+ENV EMULATE_READER_W="600" EMULATE_READER_H="1100"
 ENV PASSWD="-rfbauth /passwd"
 ARG PASSWORD=koreader
-ARG VERSION=2024.01
-ARG ARCH=amd64
-ARG KOREADERURL=https://github.com/koreader/koreader/releases/download/v$VERSION/koreader-$VERSION-$ARCH.deb
+ARG VERSION=0
+ARG ARCH=wrong
+ARG KOREADERURL=https://github.com/koreader/koreader/releases/download/v$VERSION/koreader-linux-$ARCH-v$VERSION.tar.xz
 
 # Install koreader and dependencies.
 RUN apt-get update \
@@ -21,10 +21,13 @@ RUN apt-get update \
         supervisor \
         net-tools \
         iputils-ping \
-    && wget -q $KOREADERURL -O /tmp/koreader.deb \
-    && apt-get install -y /tmp/koreader.deb \
+        libsdl2-2.0-0 \
+    && echo $KOREADERURL \
+    && wget -q $KOREADERURL -O /tmp/koreader.tar.xz \
+    && cd /usr \
+    && tar -xaf /tmp/koreader.tar.xz \
     && rm -rf /var/lib/apt/lists/* \
-    && rm /tmp/koreader.deb
+    && rm /tmp/koreader.tar.xz
 
 # Install koreader icons over novnc icons
 COPY resources/icons/* /usr/share/novnc/app/images/icons/
