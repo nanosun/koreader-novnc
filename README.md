@@ -25,6 +25,7 @@ x11vnc -storepasswd PASSWORD /passwd
 - `/books` the path where koreader will search for books by default (you can always browse). Can be read-only.
 - `/passwd` location of the vnc password file. You should create your own using `vncpasswd`. Can be read-only.
 - `/config` the path where koreader configuration is stored. Needs to be writeable.
+- `/fonts` store your custom fonts that can be recogonized by koreader
 
 ## Environment
 ### Cursor
